@@ -8,7 +8,10 @@ import GHC.Generics
 import Data.Aeson
 --------------------------------------
 -- Server Response and Client Request
-newtype ServerResponse = ServerResponse {binaryNum :: String} deriving (Generic, Eq, Show)
+data ServerResponse = ServerResponse 
+                    { binaryNum :: String
+                    , decimal   :: String
+                    } deriving (Generic, Eq, Show)
 instance ToJSON ServerResponse 
 
 newtype ClientRequest  = ClientRequest {binNum :: String} deriving (Generic, Eq, Show)

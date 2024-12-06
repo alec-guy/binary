@@ -41,7 +41,8 @@ initModel = { failure   = False
             }
 
 type alias Bin =
-  { binNum : String
+  { binNum  : String
+  , decimal : String 
   }
 
 init : () -> (Model, Cmd Msg)
@@ -141,7 +142,10 @@ displaySuccess mb =
        Nothing ->  
          text ""
        (Just r) -> 
-         div [] [text <| "Result: " ++ r.binNum]
+         div [] [text <| "Binary: " ++ r.binNum
+                ,br [] []
+                ,text <| "Decimal: " ++ r.decimal
+                ]
 
 -- HTTP
 
@@ -159,6 +163,9 @@ ourRequestValue bin = E.object [("binNum", E.string bin)]
 
 responseDecoder : D.Decoder Bin
 responseDecoder =
-   D.map Bin (D.field "binaryNum" D.string)
+   D.map2 
+   Bin 
+   (D.field "binaryNum" D.string) 
+   (D.field "decimal" D.string)
 
    
