@@ -2,7 +2,7 @@ module Main exposing (..)
 
 import Browser
 import Html exposing (..)
-import Html.Attributes exposing (style)
+import Html.Attributes exposing (style, class)
 import Html.Events exposing (..)
 import Http
 import Json.Decode as D 
@@ -96,7 +96,7 @@ subscriptions model =
 
 view : Model -> Html Msg
 view model =
-  div []
+  div [class "div-1"]
     [ h2 [] [ text "Binary Number Tool" ]
     , defaultPage model 
     , br [] []
@@ -109,7 +109,7 @@ view model =
 
 defaultPage : Model -> Html Msg 
 defaultPage model = div 
-                  []
+                  [class "div-2"]
                   [ button [ onClick Submit] [ text "Submit" ]
                   , br [] []
                   , div 

@@ -72,8 +72,8 @@ executable to-do-list
                       aeson, 
                       megaparsec,
                       parser-combinators, 
-                      bytestring
-
+                      bytestring,
+                      wai-middleware-static
 
     -- Directories containing source files.
     hs-source-dirs:   app, lib

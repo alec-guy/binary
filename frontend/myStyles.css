@@ -1,0 +1,12 @@
+div {
+    text-align: center;
+    justify-content: center;
+}
+
+.div-1 {
+    background-color: darksalmon;
+    height: 100vh;
+    width: 100vw;
+}
+
+.div-2 {}

@@ -5,6 +5,7 @@ import Parser
 import Text.Megaparsec (parse)
 import Text.Megaparsec.Error (errorBundlePretty)
 import Web.Scotty 
+import Network.Wai.Middleware.Static 
 import Data.Bits 
 import System.IO 
 import Data.ByteString as BS
@@ -30,6 +31,7 @@ instance Bits (Bin Bool) where
 main :: IO ()
 main = do 
     scotty 8000 $ do 
+      middleware $ staticPolicy (addBase "./frontend")
       get "/" $ do  
        file "frontend/index.html"
       post "/submit" $ do 
@@ -42,6 +44,7 @@ main = do
                       Left  e -> ServerResponse {binaryNum = "", decimal = ""}
                       Right r -> ServerResponse {binaryNum = show r, decimal = show $ binToInt r }
         json resp 
+
 
 
     
