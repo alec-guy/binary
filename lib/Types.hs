@@ -1,8 +1,21 @@
 {-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE DeriveGeneric #-}
+
 module Types where 
 
 import Data.Bits 
+import GHC.Generics 
+import Data.Aeson
+--------------------------------------
+-- Server Response and Client Request
+newtype ServerResponse = ServerResponse {binaryNum :: String} deriving (Generic, Eq, Show)
+instance ToJSON ServerResponse 
 
+newtype ClientRequest  = ClientRequest {binNum :: String} deriving (Generic, Eq, Show)
+instance FromJSON ClientRequest
+-------------------------------
+
+-- Our Binary data type .
 newtype Bin a = Bin [a] deriving (Eq)
 
 instance Show (Bin Bool) where 
@@ -10,6 +23,7 @@ instance Show (Bin Bool) where
                     []       -> ""
                     (b : bs) -> (if b then '1' else '0') : (show $ Bin bs)
 
+-- Useless instances 
 instance Functor Bin where 
     fmap f (Bin l) = Bin $ f <$>  l 
 instance Applicative Bin where 
@@ -19,6 +33,9 @@ instance Monad Bin where
     (Bin l) >>= f = Bin $ concat $ toList <$> f <$> l  
                   where toList :: Bin a -> [a]
                         toList (Bin l) = l 
+
+
+-- Useful instance
 instance Bits (Bin Bool) where 
     bin1 .&. bin2      =  intToBin ((binToInt bin1) .&. (binToInt bin2))
     bin1 .|. bin2      =  intToBin ((binToInt bin1) .|. (binToInt bin2))
@@ -33,6 +50,7 @@ instance Bits (Bin Bool) where
     bit i              =  intToBin $ (bit i :: Int)
     popCount (Bin l)   = length (filter (== True) l) 
 
+-- Helper functions
 binToInt :: Bin Bool -> Int 
 binToInt (Bin l) = 
      foldr 
@@ -53,6 +71,11 @@ intToBin i = Bin $ reverse ((\i -> if i == 1 then True else False) <$> (divModLo
             in case t of 
                 (0, r)     -> [r]
                 (newI, r') -> r' : (divModLoop newI two)
+
+
+
+
+
 
 
 
