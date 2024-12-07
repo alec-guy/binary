@@ -1,1 +1,4 @@
-![Screenshot 2024-12-07 122320](https://github.com/user-attachments/assets/50c05b64-836f-46a6-857f-1a798df15c57)
+Enter Binary numbers and Have it turn it in to decimal and correctly 
+identify what is a binary number and what isn't a binary number, 
+because of a haskell back end parser. 
+
