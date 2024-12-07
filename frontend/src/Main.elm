@@ -167,12 +167,15 @@ displaySuccess mb =
        Nothing ->  
          text ""
        (Just r) -> 
-         div [class "success-div"] [text <| "Binary: " ++ r.binNum
-                ,br [] []
-                ,text <| "Decimal: " ++ r.decimal
-                ,br [] []
-                ,text <| "Complement: " ++ r.comp
-                ]
+         if String.isEmpty r.binNum 
+         then div [class "success-div"] [text <| "Invalid Input"]
+         else div [class "success-div"] 
+              [text <| "Binary: " ++ r.binNum
+              ,br [] []
+              ,text <| "Decimal: " ++ r.decimal
+              ,br [] []
+              ,text <| "Complement: " ++ r.comp
+              ]
 
 -- HTTP
 
