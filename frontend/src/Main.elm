@@ -2,7 +2,7 @@ module Main exposing (..)
 
 import Browser
 import Html exposing (..)
-import Html.Attributes exposing (style, class)
+import Html.Attributes exposing (style, class, height,placeholder, width)
 import Html.Events exposing (..)
 import Http
 import Json.Decode as D 
@@ -31,6 +31,7 @@ type alias Model =
                  , loading   : Bool 
                  , success   : Maybe Bin 
                  , textInput : String 
+                 , displayButtonInput : Bool 
                  }
 
 initModel : Model 
@@ -38,6 +39,7 @@ initModel = { failure   = False
             , loading   = False
             , success   = Nothing
             , textInput = ""
+            , displayButtonInput = False
             }
 
 type alias Bin =
@@ -54,9 +56,11 @@ init _ =
 
 type Msg
   = Submit
+  | ButtonInput String
   | TextInput String
   | ButtonType ButtonTypee
   | GotBin (Result Http.Error Bin)
+  | DisplayButtonInput Bool 
 
 type ButtonTypee = Erase 
                  | Backspace
@@ -66,9 +70,10 @@ update msg model =
   case msg of
     Submit ->
       ({model | loading = True}, getBin model.textInput)
-    TextInput s -> 
+    ButtonInput s -> 
       ({model | loading = False, textInput = model.textInput ++ s}, Cmd.none)
-
+    TextInput s -> 
+     ({model | loading = False, textInput = s}, Cmd.none)
     GotBin result ->
       case result of
         Ok bin ->
@@ -79,13 +84,15 @@ update msg model =
     (ButtonType butt) -> 
           case butt of 
           Erase     -> 
-           (initModel, Cmd.none)
+           ({model | loading = False, textInput = ""}, Cmd.none)
           Backspace -> 
            ( { model | loading = False
              , textInput = String.dropRight 1 model.textInput
              }
            , Cmd.none 
            )
+    (DisplayButtonInput b) -> 
+       ({model | loading = False, displayButtonInput = b}, Cmd.none)
 
 -- SUBSCRIPTIONS
 
@@ -113,15 +120,30 @@ defaultPage model = div
                   [class "div-2"]
                   [ button [ onClick Submit] [ text "Submit" ]
                   , br [] []
-                  , div 
-                    [class "div-3"] 
-                    [ button [onClick <| TextInput "1"] [          text "1"]
-                    , button [onClick <| TextInput "0"]            [text "0"]
-                    , button [onClick <| ButtonType Backspace]     [text "<-"]
-                    , button [onClick <| ButtonType Erase]         [text "Restart"]
-                    , br [] []
-                    , text <| "Your input: " ++ model.textInput
-                    ]
+                  , button 
+                    [ onClick <| DisplayButtonInput <| not <| model.displayButtonInput
+                    , width 10
+                    , height 10] 
+                    [text "Change Input Mode"]
+                  , br [] []
+                  , case model.displayButtonInput of 
+                     False ->                     
+                         div 
+                         [class "div-3"] 
+                         [ input  [onInput TextInput, placeholder "non button input", height 10] []
+                         , br [] []
+                         , text <| "Your input: " ++ model.textInput
+                         ]
+                     True -> 
+                       div 
+                       [class "div-3"]
+                       [ button   [onClick <| ButtonInput "1"] [text "1"]
+                         , button [onClick <| ButtonInput "0"] [text "0"]
+                         , button [onClick <| ButtonType Backspace] [text "<-"]
+                         , button [onClick <| ButtonType Erase] [text "Restart"]
+                         , br [] []
+                         , text <| "Your input: " ++ model.textInput
+                       ]
                   ]
 displayFailure : Bool -> Html Msg 
 displayFailure b = 

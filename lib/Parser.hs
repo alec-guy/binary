@@ -11,6 +11,8 @@ import Control.Monad.Combinators
 import Text.Megaparsec 
 import Text.Megaparsec.Char 
 import Text.Megaparsec.Char.Lexer as L 
+import Control.Monad.Combinators.Expr 
+
 
 type Parser = Parsec Void String
 
@@ -24,6 +26,13 @@ oneParser :: Parser Char
 oneParser = char '1' 
 zeroParser :: Parser Char 
 zeroParser = char '0'
+
+{-
+expr = makeExprParser term table <?> "expression"
+term = parens expr <|> parseBin <?> "term"
+
+table = [[prefix]]
+-}
 
 parseBin :: Parser (Bin Bool)
 parseBin = do 
