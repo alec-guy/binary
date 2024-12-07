@@ -41,8 +41,9 @@ initModel = { failure   = False
             }
 
 type alias Bin =
-  { binNum  : String
-  , decimal : String 
+  { binNum     : String
+  , decimal    : String 
+  , comp : String
   }
 
 init : () -> (Model, Cmd Msg)
@@ -113,7 +114,7 @@ defaultPage model = div
                   [ button [ onClick Submit] [ text "Submit" ]
                   , br [] []
                   , div 
-                    [style "background-color" "grey"] 
+                    [class "div-3"] 
                     [ button [onClick <| TextInput "1"] [          text "1"]
                     , button [onClick <| TextInput "0"]            [text "0"]
                     , button [onClick <| ButtonType Backspace]     [text "<-"]
@@ -145,6 +146,8 @@ displaySuccess mb =
          div [] [text <| "Binary: " ++ r.binNum
                 ,br [] []
                 ,text <| "Decimal: " ++ r.decimal
+                ,br [] []
+                ,text <| "Complement: " ++ r.comp
                 ]
 
 -- HTTP
@@ -163,9 +166,10 @@ ourRequestValue bin = E.object [("binNum", E.string bin)]
 
 responseDecoder : D.Decoder Bin
 responseDecoder =
-   D.map2 
+   D.map3
    Bin 
    (D.field "binaryNum" D.string) 
    (D.field "decimal" D.string)
+   (D.field "comp" D.string)
 
    

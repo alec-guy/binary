@@ -41,8 +41,11 @@ main = do
         req    <- jsonData :: ActionM ClientRequest
         let binnum = binNum req 
             resp   = case parse parseBin "" binnum of 
-                      Left  e -> ServerResponse {binaryNum = "", decimal = ""}
-                      Right r -> ServerResponse {binaryNum = show r, decimal = show $ binToInt r }
+                      Left  e -> ServerResponse {binaryNum = "", decimal = "", comp = ""}
+                      Right r -> ServerResponse { binaryNum = show r
+                                                , decimal = show $ binToInt r 
+                                                , comp = show $ Data.Bits.complement r
+                                                }
         json resp 
 
 
