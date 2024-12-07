@@ -1,8 +1,30 @@
-div {
+.div-1 {
     padding: 50px;
-    background-color: wheat;
-    text-align: center;
+    background-color: pink;
+    display: grid;
+    place-items: center;
     border-style: solid;
     border-color: black;
+    height: 100vh;
+    width: 100vw;
 
+}
+
+button {
+    padding: 10px 24px;
+    font-size: 16px;
+}
+
+.div-2 {
+    width: 200px;
+    height: 200px;
+    background-color: aquamarine;
+    border-style: solid;
+    border-color: black;
+}
+
+.success-div {
+    background-color: aliceblue;
+    border-style: solid;
+    border-color: black;
 }

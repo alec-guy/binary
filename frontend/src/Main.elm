@@ -2,7 +2,7 @@ module Main exposing (..)
 
 import Browser
 import Html exposing (..)
-import Html.Attributes exposing (style, class, height,placeholder, width)
+import Html.Attributes exposing (style, class, height,placeholder, width, maxlength)
 import Html.Events exposing (..)
 import Http
 import Json.Decode as D 
@@ -118,6 +118,7 @@ view model =
 defaultPage : Model -> Html Msg 
 defaultPage model = div 
                   [class "div-2"]
+                  (
                   [ button [ onClick Submit] [ text "Submit" ]
                   , br [] []
                   , button 
@@ -126,17 +127,16 @@ defaultPage model = div
                     , height 10] 
                     [text "Change Input Mode"]
                   , br [] []
-                  , case model.displayButtonInput of 
+                  ]
+                  ++ 
+                    (
+                    case model.displayButtonInput of 
                      False ->                     
-                         div 
-                         [class "div-3"] 
-                         [ input  [onInput TextInput, placeholder "non button input", height 10] []
+                         [ input  [onInput TextInput, height 10, maxlength 25] []
                          , br [] []
                          , text <| "Your input: " ++ model.textInput
                          ]
                      True -> 
-                       div 
-                       [class "div-3"]
                        [ button   [onClick <| ButtonInput "1"] [text "1"]
                          , button [onClick <| ButtonInput "0"] [text "0"]
                          , button [onClick <| ButtonType Backspace] [text "<-"]
@@ -144,12 +144,14 @@ defaultPage model = div
                          , br [] []
                          , text <| "Your input: " ++ model.textInput
                        ]
-                  ]
+                    )
+                  )
+                  
 displayFailure : Bool -> Html Msg 
 displayFailure b = 
      case b of 
       True  -> 
-        div [] [text "I could not process your request"]
+        div [class "failure-div"] [text "I could not process your request"]
       False -> 
         text ""
 
@@ -157,7 +159,7 @@ displayLoading : Bool -> Html Msg
 displayLoading b = 
     case b of 
      True  -> 
-       div [] [text "Loading"]    
+       div [class "loading-div"] [text "Loading"]    
      False -> text ""
 displaySuccess : Maybe Bin -> Html Msg 
 displaySuccess mb =  
@@ -165,7 +167,7 @@ displaySuccess mb =
        Nothing ->  
          text ""
        (Just r) -> 
-         div [] [text <| "Binary: " ++ r.binNum
+         div [class "success-div"] [text <| "Binary: " ++ r.binNum
                 ,br [] []
                 ,text <| "Decimal: " ++ r.decimal
                 ,br [] []
