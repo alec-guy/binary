@@ -1,14 +1,15 @@
+{-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE OverloadedStrings #-}
 module Main where
 import Types 
 import Parser 
 import Text.Megaparsec (parse)
-import Text.Megaparsec.Error (errorBundlePretty)
 import Web.Scotty 
 import Network.Wai.Middleware.Static 
 import Data.Bits 
 import System.IO 
 import Data.ByteString as BS
+import Data.String (IsString(..))
 
 
 ------------------------------------
@@ -28,6 +29,15 @@ instance Bits (Bin Bool) where
     bit i              =  intToBin $ (bit i :: Int)
     popCount (Bin l)   = length (filter (== True) l) 
 -}
+
+instance IsString StringBin where 
+    fromString str = 
+        case parse parseBin "" str of 
+         (Left _)    -> StringBin $ Bin [] 
+         (Right bin) -> StringBin $ bin
+
+newtype StringBin = StringBin (Bin Bool) deriving (Show, Eq)
+
 main :: IO ()
 main = do 
     scotty 8000 $ do 
@@ -41,7 +51,7 @@ main = do
         req    <- jsonData :: ActionM ClientRequest
         let binnum = binNum req 
             resp   = case parse parseBin "" binnum of 
-                      Left  e -> ServerResponse {binaryNum = "", decimal = "", comp = ""}
+                      Left  _ -> ServerResponse {binaryNum = "", decimal = "", comp = ""}
                       Right r -> ServerResponse { binaryNum = show r
                                                 , decimal = show $ binToInt r 
                                                 , comp = show $ Data.Bits.complement r

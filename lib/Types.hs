@@ -28,6 +28,7 @@ instance Show (Bin Bool) where
                     []       -> ""
                     (b : bs) -> (if b then '1' else '0') : (show $ Bin bs)
 
+
 -- Useless instances 
 instance Functor Bin where 
     fmap f (Bin l) = Bin $ f <$>  l 
